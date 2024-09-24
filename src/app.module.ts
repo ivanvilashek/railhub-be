@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
 import { ConfigModule } from '@nestjs/config'
 import * as Joi from 'joi'
-import { EnvironmentVariables } from '@app/common'
+import { AccessTokenGuard, EnvironmentVariables } from '@app/common'
+import { AuthModule } from '@app/auth'
+import { UserModule } from '@app/user'
+import { PrismaModule } from '@app/prisma'
+import { APP_GUARD } from '@nestjs/core'
 
 @Module({
   imports: [
@@ -13,10 +15,22 @@ import { EnvironmentVariables } from '@app/common'
       validationSchema: Joi.object<EnvironmentVariables>({
         DATABASE_URL: Joi.string().required(),
         PORT: Joi.number().default(4000),
+        JWT_ACCESS_SECRET: Joi.string().required(),
+        JWT_REFRESH_SECRET: Joi.string().required(),
       }),
     }),
+
+    PrismaModule,
+
+    AuthModule,
+
+    UserModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AccessTokenGuard,
+    },
+  ],
 })
 export class AppModule {}

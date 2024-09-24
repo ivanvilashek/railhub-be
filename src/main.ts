@@ -12,6 +12,8 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('RailHub')
     .setDescription('RailHub API Reference')
+    .addBearerAuth({ type: 'http' }, 'JWT Access')
+    .addBearerAuth({ type: 'http' }, 'JWT Refresh')
     .setVersion('0.0.1')
     .build()
 
