@@ -1,5 +1,5 @@
 import { PrismaService } from '@app/prisma/prisma.service'
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { Prisma, User } from '@prisma/client'
 
 @Injectable()
@@ -10,8 +10,22 @@ export class UserService {
     return this.prisma.user.findUnique({ where: { email } })
   }
 
-  public async findById(id: string): Promise<User> {
-    return this.prisma.user.findUnique({ where: { id } })
+  public async findById(id: string): Promise<Omit<User, 'hash'>> {
+    const user = await this.prisma.user.findUnique({
+      select: {
+        firstName: true,
+        lastName: true,
+        email: true,
+        id: true,
+      },
+      where: { id },
+    })
+
+    if (!user) {
+      throw new NotFoundException('No user found')
+    }
+
+    return user
   }
 
   public async create(data: Prisma.UserCreateInput): Promise<User> {
