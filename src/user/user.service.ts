@@ -17,6 +17,8 @@ export class UserService {
         lastName: true,
         email: true,
         id: true,
+        createdAt: true,
+        updatedAt: true,
       },
       where: { id },
     })
@@ -28,11 +30,16 @@ export class UserService {
     return user
   }
 
-  public async create(data: Prisma.UserCreateInput): Promise<User> {
+  public async create(
+    data: Omit<Prisma.UserCreateInput, 'id' | 'createdAt' | 'updatedAt'>,
+  ): Promise<User> {
     return this.prisma.user.create({ data })
   }
 
-  public async update(data: Prisma.UserUpdateInput, id: string): Promise<User> {
+  public async update(
+    data: Omit<Prisma.UserUpdateInput, 'id' | 'createdAt' | 'updatedAt'>,
+    id: string,
+  ): Promise<User> {
     return this.prisma.user.update({ data, where: { id } })
   }
 }
