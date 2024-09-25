@@ -5,6 +5,7 @@ import { AccessTokenGuard, EnvironmentVariables } from '@app/common'
 import { AuthModule } from '@app/auth'
 import { UserModule } from '@app/user'
 import { PrismaModule } from '@app/prisma'
+import { ScheduleModule } from '@app/schedule'
 import { APP_GUARD } from '@nestjs/core'
 
 @Module({
@@ -25,6 +26,8 @@ import { APP_GUARD } from '@nestjs/core'
     AuthModule,
 
     UserModule,
+
+    ScheduleModule,
   ],
   providers: [
     {

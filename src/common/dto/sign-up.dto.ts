@@ -1,22 +1,32 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Prisma } from '@prisma/client'
-import { IsEmail, IsString } from 'class-validator'
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator'
 
-export class SignUpDto implements Omit<Prisma.UserCreateInput, 'hash'> {
+export class SignUpDto
+  implements
+    Omit<Prisma.UserCreateInput, 'hash' | 'id' | 'createdAt' | 'updatedAt'>
+{
   @IsString()
   @IsEmail()
-  @ApiProperty({ type: String, title: 'User email' })
+  @ApiProperty({
+    type: String,
+    title: 'User email',
+    example: 'john.doe@test.com',
+  })
   readonly email: string
 
   @IsString()
-  @ApiProperty({ type: String, title: 'User first name' })
+  @IsNotEmpty()
+  @ApiProperty({ type: String, title: 'User first name', example: 'John' })
   readonly firstName: string
 
   @IsString()
-  @ApiProperty({ type: String, title: 'User last name' })
+  @IsNotEmpty()
+  @ApiProperty({ type: String, title: 'User last name', example: 'Doe' })
   readonly lastName: string
 
   @IsString()
-  @ApiProperty({ type: String, title: 'User password' })
+  @IsNotEmpty()
+  @ApiProperty({ type: String, title: 'User password', example: 'qwerty123' })
   readonly password: string
 }
