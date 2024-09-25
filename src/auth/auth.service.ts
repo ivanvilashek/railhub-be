@@ -1,10 +1,6 @@
 import { JwtPayload, SignInDto, SignUpDto, Tokens } from '@app/common'
 import { UserService } from '@app/user'
-import {
-  Injectable,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common'
+import { Injectable, BadRequestException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcryptjs'
@@ -47,13 +43,9 @@ export class AuthService {
 
     const user = await this.userService.findByEmail(email)
 
-    if (!user) {
-      throw new NotFoundException(`User with email ${email} doesn't exist`)
-    }
+    const isMatch = await bcrypt.compare(password, user?.hash || '')
 
-    const isMatch = await bcrypt.compare(password, user.hash)
-
-    if (!isMatch) {
+    if (!user || !isMatch) {
       throw new BadRequestException('Invalid credentials')
     }
 
