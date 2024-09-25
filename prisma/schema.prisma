@@ -14,9 +14,23 @@ datasource db {
 }
 
 model User {
-  id        String @id @default(uuid())
-  email     String @unique
+  id        String   @id @default(uuid())
+  email     String   @unique
   firstName String
   lastName  String
   hash      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Schedule {
+  id          String   @id @default(uuid())
+  train       String
+  price       Int
+  arrival     String
+  departure   String
+  departureAt DateTime
+  arrivalAt   DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
